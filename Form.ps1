@@ -161,25 +161,28 @@ $devmgmt.add_Click({
 function BrowseInIE () {
     Param($PNDdevice)
     # encode the chain with ASCII value to pass as a web request search.
-    $query = [System.Web.HttpUtility]::UrlEncode($PNPDevice)
+    $query = [System.Web.HttpUtility]::UrlEncode($PNDdevice)
     # create an instane of IE and launc search
     $ie = New-Object -ComObject InternetExplorer.Application
-    $ie.Navigate("http://www.google.com/search?q="+ $query)
+    $stringURL = "http://www.google.com/search?q="+$query
+    Write-Host $stringURL
+    $ie.Navigate($stringURL)
     $ie.Visible = $true
 
 }
 
 $MissinglistView.Add_SelectionChanged({
     $SearchArea.Visibility = "Visible"
-    $script:CurrentDevice = $MissinglistView.Selected
-    Write-Host $script:CurrentDevice
+    # update the selected device
+    $script:CurrentDevice = $MissinglistView.SelectedItem
 })
 
 $SearchButton.add_Click({
 
-    Write-Host $script:CurrentDevice
     if($script:CurrentDevice -ne "" -or $script:CurrentDevice -ne $null){
         Write-Host $CurrentDevice.PNPDeviceID
+        # borwse in IE
+        BrowseInIE -PNDdevice $CurrentDevice.PNPDeviceID
     }
 })
 
