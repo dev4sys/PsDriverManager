@@ -50,7 +50,9 @@ $FolderLocation   = $Form.FindName("FolderLocation")
 $BrowseFolder     = $Form.FindName("BrowseFolder")
 $ExportFile       = $Form.FindName("ExportFile")
 
-
+$SearchArea   = $Form.FindName("SearchArea")
+$SearchButton   = $Form.FindName("SearchButton")
+$SearchArea.Visibility = "Collapsed"
 #########################################################################
 #                         Initialize List                               #
 #########################################################################
@@ -155,22 +157,31 @@ $devmgmt.add_Click({
 #End region 
 
 #Region "Export"
-function showtest(){
-    Write-Host "test"
-}
 
-
-
-[System.Windows.RoutedEventHandler]$EventOnGridView = {
-    Param($sender, $e)
-     Write-Host $sender
-    Write-Host $sender.Datacontext
-    Write-Host $MissinglistView.SelectedItem
-
+function BrowseInIE () {
+    Param($PNDdevice)
+    # encode the chain with ASCII value to pass as a web request search.
+    $query = [System.Web.HttpUtility]::UrlEncode($PNPDevice)
+    # create an instane of IE and launc search
+    $ie = New-Object -ComObject InternetExplorer.Application
+    $ie.Navigate("http://www.google.com/search?q="+ $query)
+    $ie.Visible = $true
 
 }
-$MissinglistView.AddHandler([System.Windows.Controls.Button]::ClickEvent, $EventOnGridView)
 
+$MissinglistView.Add_SelectionChanged({
+    $SearchArea.Visibility = "Visible"
+    $script:CurrentDevice = $MissinglistView.Selected
+    Write-Host $script:CurrentDevice
+})
+
+$SearchButton.add_Click({
+
+    Write-Host $script:CurrentDevice
+    if($script:CurrentDevice -ne "" -or $script:CurrentDevice -ne $null){
+        Write-Host $CurrentDevice.PNPDeviceID
+    }
+})
 
 $BrowseFolder.add_Click({
     
@@ -205,17 +216,6 @@ $ExportFile.add_Click({
 })
 
 #End region 
-
-
-$PNPDevice = "ACPI\INT340F\2&DABA3FF&0"
-
-$query = [System.Web.HttpUtility]::UrlEncode($PNPDevice)
-
-Write-Host "http://www.bing.com/search?q="$query
-
-#$ie = New-Object -ComObject InternetExplorer.Application
-#$ie.Navigate("http://www.google.com/search?q="+ $query)
-#$ie.Visible = $true
 
 
 #########################################################################
