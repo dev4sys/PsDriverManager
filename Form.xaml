@@ -8,7 +8,7 @@
 	<Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-			<ResourceDictionary Source="resources\Icons.xaml" />
+				<ResourceDictionary Source="resources\Icons.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
@@ -21,10 +21,8 @@
 	
    <Grid>
 	    <Grid.RowDefinitions>
-
             <RowDefinition Height="0.6*"/>
             <RowDefinition Height="0.4*"/>
-			
         </Grid.RowDefinitions>
 		
 		<Grid Grid.Row="0" Margin="0,5,0,10" >
@@ -163,10 +161,6 @@
 				</GroupBox>
 			</StackPanel>
 		</Grid>
-		
-	
-
-		
 		
     </Grid>
 	

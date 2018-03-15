@@ -9,7 +9,7 @@
 #                        Add shared_assemblies                          #
 #########################################################################
 
-[System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms")  | Out-Null
+[System.Reflection.Assembly]::LoadWithPartialName("System.windows.Forms")  | Out-Null
 [System.Reflection.Assembly]::LoadWithPartialName('presentationframework') | out-null
 [System.Reflection.Assembly]::LoadWithPartialName("System.Web")            | Out-Null
 [System.Reflection.Assembly]::LoadFrom('assembly\MahApps.Metro.dll')       | out-null  
@@ -50,8 +50,9 @@ $FolderLocation   = $Form.FindName("FolderLocation")
 $BrowseFolder     = $Form.FindName("BrowseFolder")
 $ExportFile       = $Form.FindName("ExportFile")
 
-$SearchArea   = $Form.FindName("SearchArea")
+$SearchArea     = $Form.FindName("SearchArea")
 $SearchButton   = $Form.FindName("SearchButton")
+
 $SearchArea.Visibility = "Collapsed"
 #########################################################################
 #                         Initialize List                               #
