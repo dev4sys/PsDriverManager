@@ -1,15 +1,13 @@
 #########################################################################
 # Author:  Kevin RAHETILAHY                                             #
-# E-mail: kevin.rhtl@gmail.com                                          #
-# Blog: dev4sys.blogspot.fr                                             #
+# Blog: dev4sys.com                                                     #
 #########################################################################
 
 
 #########################################################################
-#                        Add shared_assemblies                          #
+#                        ASSEMBLY                                       #
 #########################################################################
 
-[System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms")  | Out-Null
 [System.Reflection.Assembly]::LoadWithPartialName('presentationframework') | out-null
 [System.Reflection.Assembly]::LoadWithPartialName("System.Web")            | Out-Null
 [System.Reflection.Assembly]::LoadFrom('assembly\MahApps.Metro.dll')       | out-null  
