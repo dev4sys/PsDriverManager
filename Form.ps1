@@ -20,21 +20,19 @@
 
 $Global:pathPanel= split-path -parent $MyInvocation.MyCommand.Definition
 
-function LoadXaml ($filename){
+Function LoadXaml ($filename){
     $XamlLoader=(New-Object System.Xml.XmlDocument)
     $XamlLoader.Load($filename)
     return $XamlLoader
 }
 
-
 $XamlMainWindow=LoadXaml($pathPanel+"\form.xaml")
-$reader = (New-Object System.Xml.XmlNodeReader $XamlMainWindow)
-$Form = [Windows.Markup.XamlReader]::Load($reader)
+$reader     = (New-Object System.Xml.XmlNodeReader $XamlMainWindow)
+$Form       = [Windows.Markup.XamlReader]::Load($reader)
 
-
-$MissinglistView  = $Form.FindName("MissinglistView")
-$DisabledlistView = $Form.FindName("DisabledlistView")
-$OthersListView   = $Form.FindName("OthersListView")
+$MissinglistView    = $Form.FindName("MissinglistView")
+$DisabledlistView   = $Form.FindName("DisabledlistView")
+$OthersListView     = $Form.FindName("OthersListView")
 
 $msinfo32   = $Form.FindName("msinfo32")
 $dxDiag     = $Form.FindName("dxDiag")
@@ -44,29 +42,30 @@ $MissingBadge   = $Form.FindName("MissingBadge")
 $DisabledBadge  = $Form.FindName("DisabledBadge")
 $OthersdBadge   = $Form.FindName("OthersdBadge")
 
-$FolderLocation   = $Form.FindName("FolderLocation")
-$BrowseFolder     = $Form.FindName("BrowseFolder")
-$ExportFile       = $Form.FindName("ExportFile")
+$FolderLocation = $Form.FindName("FolderLocation")
+$BrowseFolder   = $Form.FindName("BrowseFolder")
+$ExportFile     = $Form.FindName("ExportFile")
 
-$SearchArea   = $Form.FindName("SearchArea")
+$SearchArea     = $Form.FindName("SearchArea")
 $SearchButton   = $Form.FindName("SearchButton")
 $SearchArea.Visibility = "Collapsed"
+
 #########################################################################
 #                         Initialize List                               #
 #########################################################################
-   
-try {
-           
-    if($MissinglistView.Items.Count -ne 0){ $MissinglistView.Items.Clear()}
+
+Try {
+
+    If($MissinglistView.Items.Count -ne 0){ $MissinglistView.Items.Clear()}
 
 
     $DeviceList = Get-WmiObject Win32_PNPEntity | Where-Object {$_.ConfigManagerErrorCode -gt 0 }
-            
+
     $MissingDriver =  $DeviceList | Where-Object {$_.ConfigManagerErrorCode -eq 28 }
     $DisableDevice =  $DeviceList | Where-Object {$_.ConfigManagerErrorCode -eq 22 -or $_.ConfigManagerErrorCode -eq 29 } 
     $othersDevice  =  $DeviceList | Where-Object {$_.ConfigManagerErrorCode -ne 22 -and $_.ConfigManagerErrorCode -ne 29 -and $_.ConfigManagerErrorCode -ne 28 }           
-                      
-        
+
+
         $nbrOfMisingIssues   = ($MissingDriver | Measure-Object).Count
         $nbrOfDisabledIssues = ($DisableDevice | Measure-Object).Count
         $nbrOfRestIssues     = ($othersDevice | Measure-Object).Count
@@ -78,18 +77,20 @@ try {
         # ======== Missing Driver ============
         $Script:ContentObject = @()   
         Foreach($device in $MissingDriver) {
-            
+
             $objArray = New-Object PSObject
             $objArray | Add-Member -type NoteProperty -name Caption -value $device.Caption
             $objArray | Add-Member -type NoteProperty -name PNPDeviceID -value $device.PNPDeviceID
             $objArray | Add-Member -type NoteProperty -name ErrorCode -value $device.ConfigManagerErrorCode
+
             If ($device.Manufacturer -ne $null){$objArray | Add-Member -type NoteProperty -name Manufacturer -value $device.Manufacturer}
             Else{$objArray | Add-Member -type NoteProperty -name Manufacturer -value "Unknown"}
             $ContentObject += $objArray 
-            $MissinglistView.Items.Add($objArray) | Out-Null   
-        }          
-        
+            $MissinglistView.Items.Add($objArray) | Out-Null
+        }
+
         # ======== Missing Driver ============
+
         $Script:ContentObject1 = @()   
         Foreach($device in $DisableDevice) {
 
@@ -97,14 +98,17 @@ try {
             $objArray | Add-Member -type NoteProperty -name Caption -value $device.Caption
             $objArray | Add-Member -type NoteProperty -name PNPDeviceID -value $device.PNPDeviceID
             $objArray | Add-Member -type NoteProperty -name ErrorCode -value $device.ConfigManagerErrorCode
+
             If ($device.Manufacturer -ne $null){$objArray | Add-Member -type NoteProperty -name Manufacturer -value $device.Manufacturer}
             Else{$objArray | Add-Member -type NoteProperty -name Manufacturer -value "Unknown"}
             $ContentObject1 += $objArray 
 
-            $DisabledlistView.Items.Add($objArray) | Out-Null   
-        } 
-        
+            $DisabledlistView.Items.Add($objArray) | Out-Null
+        }
+
+
         # ======== Missing Driver ============
+
         $Script:ContentObject2 = @()   
         Foreach($device in $othersDevice) {
 
@@ -112,25 +116,24 @@ try {
             $objArray | Add-Member -type NoteProperty -name Caption -value $device.Caption
             $objArray | Add-Member -type NoteProperty -name PNPDeviceID -value $device.PNPDeviceID
             $objArray | Add-Member -type NoteProperty -name ErrorCode -value $device.ConfigManagerErrorCode
+
             If ($device.Manufacturer -ne $null){$objArray | Add-Member -type NoteProperty -name Manufacturer -value $device.Manufacturer}
             Else{$objArray | Add-Member -type NoteProperty -name Manufacturer -value "Unknown"}
-            $ContentObject2 += $objArray 
+            $ContentObject2 += $objArray
+            $OthersListView.Items.Add($objArray) | Out-Null
+        
+        }
 
-            $OthersListView.Items.Add($objArray) | Out-Null   
-        }       
-           
 }
 catch {
-     Write-Host $_.Exception.Message
+    Write-Host $_.Exception.Message
 }
-
 
 
 $Form.add_MouseLeftButtonDown({
-   $_.handled=$true
-   $this.DragMove()
+    $_.handled=$true
+    $this.DragMove()
 })
-     
 
 
 #########################################################################
@@ -152,15 +155,18 @@ $devmgmt.add_Click({
     devmgmt.msc
 })
 
-#End region 
+#End region
 
 #Region "Export"
 
-function BrowseInIE () {
+Function BrowseInIE () {
+
     Param($PNDdevice)
+
     # encode the chain with ASCII value to pass as a web request search.
     $query = [System.Web.HttpUtility]::UrlEncode($PNDdevice)
-    # create an instane of IE and launc search
+
+    # create an instane of IE and launch search
     $ie = New-Object -ComObject InternetExplorer.Application
     $stringURL = "http://www.google.com/search?q="+$query
     Write-Host $stringURL
@@ -185,7 +191,7 @@ $SearchButton.add_Click({
 })
 
 $BrowseFolder.add_Click({
-    
+
     $foldername = New-Object System.Windows.Forms.FolderBrowserDialog
     $foldername.rootfolder = "Desktop"
 
@@ -194,11 +200,11 @@ $BrowseFolder.add_Click({
         $folder = $foldername.SelectedPath
     }
 
-    $FolderLocation.Text = $folder   
-}) 
-    
+    $FolderLocation.Text = $folder
+})
+
 $ExportFile.add_Click({
-    
+
     $FileNameExport = $FolderLocation.Text + "\MissingDriver.csv"
     $retVal = 0
     try{
@@ -210,9 +216,13 @@ $ExportFile.add_Click({
         Write-Host $_.Exception.Message
         $retVal = 1
     }
-    
-    If ($retVal -eq 0){ [MahApps.Metro.Controls.Dialogs.DialogManager]::ShowModalMessageExternal($Form,"Export File", "File has been successfully created.") }
-    else{[MahApps.Metro.Controls.Dialogs.DialogManager]::ShowModalMessageExternal($Form,"Export File", "An error occured when exporting the file. :( ")}
+
+    If ($retVal -eq 0){ 
+        [MahApps.Metro.Controls.Dialogs.DialogManager]::ShowModalMessageExternal($Form,"Export File", "File has been successfully created.") 
+    }
+    else{
+        [MahApps.Metro.Controls.Dialogs.DialogManager]::ShowModalMessageExternal($Form,"Export File", "An error occured when exporting the file. :( ")
+    }
 
 })
 
@@ -223,4 +233,5 @@ $ExportFile.add_Click({
 #                        Show Dialog                                    #
 #########################################################################
 $Form.ShowDialog() | Out-Null
-  
+
+

@@ -2,7 +2,8 @@
         xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Driver Manager - v1.0" Name="MainPanel" MaxHeight="768" MaxWidth="1024" WindowStartupLocation="CenterScreen" >  
+        Title="Driver Manager" Name="MainPanel" MaxHeight="740" MaxWidth="1024" 
+		WindowStartupLocation="CenterScreen" >  
 
 	
 	<Window.Resources>
@@ -52,16 +53,58 @@
 							<RowDefinition Height="30"/>	
 						</Grid.RowDefinitions>
 						<Grid Grid.Row="0" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="15,0,0,0" Background="#1BA1E2 " >	
-							<ListView x:Name="MissinglistView" Margin="1,1,1,1" HorizontalAlignment="Stretch" Height="Auto">
-								<ListView.View>
-									<GridView >				
-										<GridViewColumn Header="PNP device ID" 	Width="300" DisplayMemberBinding ="{Binding PNPDeviceID}"/>
-										<GridViewColumn Header="Error Code" 	Width="100" DisplayMemberBinding ="{Binding ErrorCode}" />
-										<GridViewColumn Header="Manufacturer"   Width="150" DisplayMemberBinding ="{Binding Manufacturer}"/>
-										<GridViewColumn Header="Caption"       	Width="200" DisplayMemberBinding ="{Binding Caption}"/>
-									</GridView>
-								</ListView.View>
-							</ListView>
+							
+							
+							<DataGrid  x:Name="MissinglistView" Margin="1,1,1,1" HorizontalAlignment="Stretch" Height="Auto">
+							
+							
+								<DataGrid.Columns>
+
+									<DataGridTemplateColumn>
+										<DataGridTemplateColumn.CellTemplate>
+											<DataTemplate>
+												<StackPanel Orientation="Horizontal">
+
+													<Button x:Name="View"  Background="#FF44AFE3" Style="{DynamicResource MetroCircleButtonStyle}" 
+														Height="28" Width="28" Cursor="Hand" HorizontalContentAlignment="Stretch" 
+														VerticalContentAlignment="Stretch" HorizontalAlignment="Center" VerticalAlignment="Center" 
+														BorderThickness="0" Margin="0,0,0,0">
+														<Rectangle Width="10" Height="10" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="white">
+															<Rectangle.OpacityMask>
+																<VisualBrush  Stretch="Fill" Visual="{StaticResource appbar_magnify}"/>
+															</Rectangle.OpacityMask>
+														</Rectangle>
+													</Button>
+
+													<Button x:Name="Edit"  Background="#198C19" Style="{DynamicResource MetroCircleButtonStyle}" 
+														Height="28" Width="28" Cursor="Hand" HorizontalContentAlignment="Stretch" 
+														VerticalContentAlignment="Stretch" HorizontalAlignment="Center" VerticalAlignment="Center" 
+														BorderThickness="0" Margin="0,0,0,0">
+														<Rectangle Width="10" Height="10" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="white">
+															<Rectangle.OpacityMask>
+																<VisualBrush  Stretch="Fill" Visual="{StaticResource appbar_edit}"/>
+															</Rectangle.OpacityMask>
+														</Rectangle>
+													</Button>
+
+												</StackPanel>
+
+											</DataTemplate>
+										</DataGridTemplateColumn.CellTemplate>
+									</DataGridTemplateColumn>
+
+									<DataGridTextColumn Header="PNP device ID" 	IsReadOnly="True"	Width="Auto" Binding ="{Binding PNPDeviceID}"/>
+									<DataGridTextColumn Header="Error Code" 	IsReadOnly="True"	Width="Auto" Binding ="{Binding ErrorCode}" />
+									<DataGridTextColumn Header="Manufacturer"   IsReadOnly="True"	Width="Auto" Binding ="{Binding Manufacturer}"/>
+									<DataGridTextColumn Header="Caption"        IsReadOnly="True"	Width="Auto" Binding ="{Binding Caption}"/>
+												
+
+												
+								</DataGrid.Columns>
+
+							</DataGrid>
+
+
 						</Grid>
 						<Grid x:Name="SearchArea" Grid.Row="1" HorizontalAlignment="Right" >
 							<Button x:Name="SearchButton" Width="250" Background="#1BA1E2" BorderBrush="#1BA1E2" BorderThickness="0" >
