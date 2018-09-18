@@ -175,10 +175,28 @@ Function BrowseInIE () {
 
 }
 
+
+$DisabledlistView.Add_MouseDoubleClick({
+
+    [System.Object]$script:sender = $args[0]
+	[System.Windows.RoutedEventArgs]$script:e = $args[1]
+
+    $script:CurrentDevice = $DisabledlistView.SelectedItem
+    $script:e.OriginalSource.Background = "gray"
+
+    Write-Host $script:CurrentDevice
+
+})
+
+
 $MissinglistView.Add_SelectionChanged({
+
+
+
     $SearchArea.Visibility = "Visible"
     # update the selected device
     $script:CurrentDevice = $MissinglistView.SelectedItem
+
 })
 
 $SearchButton.add_Click({
